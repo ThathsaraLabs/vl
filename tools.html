@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vector Labs AI | Interactive AI Assistant Hub</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Access South Korean visa guides and driving license exchange assistants in Sinhala and English, powered by Vector Labs AI.">
+  <meta name="author" content="Vector Labs AI">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cyber: {
+              bg: '#030014',
+              card: 'rgba(12, 6, 28, 0.6)',
+              cyan: '#06b6d4',
+              purple: '#8b5cf6',
+              text: '#f3f4f6',
+              accent: '#10b981'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#030014] text-gray-200 font-sans selection:bg-cyan-500/30 selection:text-cyan-200 overflow-hidden h-screen flex flex-col cyber-grid">
+
+  <!-- Global Header Bar -->
+  <header class="glass-panel border-b border-white/5 py-3 px-6 flex items-center justify-between flex-shrink-0 z-30">
+    <div class="flex items-center space-x-3">
+      <a href="index.html" class="flex items-center space-x-3 group">
+        <div class="w-8 h-8 rounded-lg overflow-hidden border border-cyan-500/30 flex items-center justify-center bg-black/40 group-hover:border-cyan-500 transition duration-300">
+          <img src="assets/logo.png" alt="Vector Labs AI Logo" class="w-6 h-6 object-contain">
+        </div>
+        <span class="text-lg font-bold font-display text-white tracking-wider group-hover:text-cyan-400 transition duration-300">
+          VECTOR LABS <span class="gradient-text-cyan-purple">AI</span>
+        </span>
+      </a>
+      <span class="text-xs text-gray-500 font-mono hidden sm:inline">|</span>
+      <span class="text-xs text-cyan-400 font-mono tracking-widest uppercase hidden sm:inline">Interactive AI Hub</span>
+    </div>
+
+    <!-- Multi-page Links in Tools Header -->
+    <nav class="hidden lg:flex items-center space-x-6 text-xs font-semibold text-gray-400">
+      <a href="index.html" class="hover:text-cyan-400 transition">Home</a>
+      <a href="about.html" class="hover:text-cyan-400 transition">About Us</a>
+      <a href="services.html" class="hover:text-cyan-400 transition">Services</a>
+      <a href="contact.html" class="hover:text-cyan-400 transition">Contact</a>
+    </nav>
+
+    <div class="flex items-center space-x-4">
+      <!-- Language Selector Buttons -->
+      <div class="flex bg-black/40 rounded-lg p-1 border border-white/10 text-xs">
+        <button id="lang-en" class="px-3 py-1.5 rounded-md font-semibold transition duration-300 ease-in-out border border-transparent">
+          English
+        </button>
+        <button id="lang-si" class="px-3 py-1.5 rounded-md font-semibold transition duration-300 ease-in-out border border-transparent">
+          සිංහල
+        </button>
+      </div>
+
+      <!-- Exit Button -->
+      <a href="index.html" class="text-xs text-gray-400 hover:text-white px-3 py-1.5 rounded border border-white/10 hover:bg-white/5 transition">
+        <i class="fas fa-arrow-left mr-2"></i>Exit Hub
+      </a>
+    </div>
+  </header>
+
+  <!-- Dashboard Workspace Container -->
+  <div class="flex-1 flex overflow-hidden relative z-10">
+
+    <!-- Left Sidebar: Bot Selection & Quick tools -->
+    <aside class="w-80 glass-panel border-r border-white/5 flex flex-col flex-shrink-0 hidden lg:flex">
+      
+      <!-- Section 1: Chatbot Selector Tabs -->
+      <div class="p-4 space-y-3">
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest font-display mb-1">Select AI Assistant</h3>
+        
+        <!-- Tab 1: K-Visa -->
+        <button id="tab-visa" class="w-full flex items-center justify-between p-3 rounded-xl border transition-all duration-300 ease-in-out bg-cyan-500/10 border-cyan-500/40 text-cyan-400 text-left">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-lg bg-cyan-950/40 flex items-center justify-center text-lg">
+              <i class="fas fa-passport"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold font-display text-white tab-label">K-Visa Guide</div>
+              <div class="text-[10px] text-gray-400 mt-0.5">Visa pathways &amp; checklists</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-xs opacity-50"></i>
+        </button>
+
+        <!-- Tab 2: K-Driving -->
+        <button id="tab-driving" class="w-full flex items-center justify-between p-3 rounded-xl border border-transparent hover:bg-white/5 text-gray-400 hover:text-white transition-all duration-300 ease-in-out text-left">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-lg bg-black/40 flex items-center justify-center text-lg">
+              <i class="fas fa-car"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold font-display text-white tab-label">K-Driving Licence</div>
+              <div class="text-[10px] text-gray-400 mt-0.5">License exchange &amp; exams</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-xs opacity-50"></i>
+        </button>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-white/5 mx-4"></div>
+
+      <!-- Section 2: Quick Tools launcher -->
+      <div class="p-4 space-y-4 flex-1">
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest font-display">Interactive Quick Tools</h3>
+        
+        <!-- Visa Quiz Card -->
+        <div id="trigger-quiz" class="glass-panel p-4 rounded-xl border border-white/5 hover:border-cyan-500/30 cursor-pointer transition duration-300 group">
+          <div class="flex items-center justify-between">
+            <i class="fas fa-calculator text-cyan-400 text-lg group-hover:scale-110 transition duration-300"></i>
+            <span class="text-[9px] font-mono text-cyan-300 uppercase">Interactive</span>
+          </div>
+          <h4 class="text-xs font-bold text-white mt-2 mb-1" id="btn-quiz-text">Visa Eligibility Quiz</h4>
+          <p class="text-[10px] text-gray-400 leading-normal font-light">Simulate E-9 to E-7-4 point conversion or check student visa transitions.</p>
+        </div>
+
+        <!-- Checklist Card -->
+        <div id="trigger-checklist" class="glass-panel p-4 rounded-xl border border-white/5 hover:border-purple-500/30 cursor-pointer transition duration-300 group">
+          <div class="flex items-center justify-between">
+            <i class="fas fa-clipboard-check text-purple-400 text-lg group-hover:scale-110 transition duration-300"></i>
+            <span class="text-[9px] font-mono text-purple-300 uppercase">Tracker</span>
+          </div>
+          <h4 class="text-xs font-bold text-white mt-2 mb-1" id="btn-check-text">Licence Doc Tracker</h4>
+          <p class="text-[10px] text-gray-400 leading-normal font-light">Follow the document checklist parameters to exchange Sri Lankan license.</p>
+        </div>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="p-4 bg-black/20 border-t border-white/5 text-[10px] text-gray-500 text-center font-light">
+        Powered by Vector Labs AI Systems
+      </div>
+    </aside>
+
+    <!-- Main Chat Interface Panel -->
+    <main class="flex-1 flex flex-col h-full bg-black/20 overflow-hidden">
+      
+      <!-- Active Assistant Bar -->
+      <div class="glass-panel px-6 py-4 border-b border-white/5 flex items-center justify-between flex-shrink-0">
+        <div>
+          <h2 id="chatbot-title" class="text-sm font-bold text-white font-display">K-Visa Guide</h2>
+          <p id="chatbot-subtitle" class="text-[11px] text-gray-400 mt-0.5">Your automated assistant for South Korean visa pathways, requirements, and compliance.</p>
+        </div>
+        
+        <!-- Mobile Dropdown Selector (visible only on small screens) -->
+        <div class="flex lg:hidden space-x-2">
+          <button onclick="switchBot('visa')" class="px-3 py-1.5 bg-cyan-950/40 text-cyan-400 text-xs rounded border border-cyan-500/20">Visa</button>
+          <button onclick="switchBot('driving')" class="px-3 py-1.5 bg-black/40 text-gray-400 text-xs rounded border border-white/10">Licence</button>
+        </div>
+      </div>
+
+      <!-- Chat bubbles log container -->
+      <div id="chat-history" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <!-- Messages loaded dynamically via JS -->
+      </div>
+
+      <!-- Typing Indicator -->
+      <div id="typing-indicator" class="hidden px-6 py-2 flex items-center space-x-2 text-xs text-gray-400 bg-black/10 flex-shrink-0">
+        <i class="fas fa-spinner animate-spin text-cyan-400"></i>
+        <span>AI Assistant is writing...</span>
+      </div>
+
+      <!-- Suggestions Quick Chips container -->
+      <div class="px-6 py-2 border-t border-white/5 bg-black/10 flex-shrink-0">
+        <div class="text-[10px] text-gray-500 font-semibold uppercase tracking-widest mb-1.5">Suggested Queries</div>
+        <div id="suggestion-chips" class="flex flex-wrap gap-2">
+          <!-- Dynamically generated suggestions -->
+        </div>
+      </div>
+
+      <!-- Message input tray -->
+      <div class="p-4 border-t border-white/5 bg-[#030014] flex-shrink-0">
+        <form id="chat-form" class="flex items-center space-x-3 max-w-4xl mx-auto">
+          <input type="text" id="chat-input" required autocomplete="off" class="flex-1 bg-black/40 border border-white/10 rounded-xl p-3 text-xs sm:text-sm text-gray-200 focus:border-cyan-500 focus:outline-none transition duration-300" placeholder="Ask about D-2 visa documents, points, or exchange process...">
+          <button type="submit" class="bg-cyan-600 hover:bg-cyan-500 text-white font-semibold font-display text-xs uppercase tracking-wider py-3 px-6 rounded-xl transition duration-300 flex items-center space-x-2">
+            <i class="fas fa-paper-plane text-[10px]"></i>
+            <span>Send</span>
+          </button>
+        </form>
+      </div>
+
+    </main>
+
+    <!-- Right Telemetry Panel: Hosts interactive widgets -->
+    <aside class="w-80 glass-panel border-l border-white/5 p-4 flex-shrink-0 hidden xl:block">
+      <div class="h-full flex flex-col justify-between">
+        
+        <!-- Live tool widget box -->
+        <div id="interactive-widget-box" class="glass-panel p-4 rounded-xl border border-white/5 flex-1 relative overflow-y-auto">
+          <!-- Loaded dynamically based on active chatbot -->
+        </div>
+
+        <!-- System specs card -->
+        <div class="mt-4 p-3 bg-black/40 border border-white/5 rounded-lg space-y-1.5 font-mono text-[9px] text-gray-500">
+          <div class="text-cyan-400 font-bold uppercase tracking-wider mb-1">SYSTEM SPECIFICATIONS</div>
+          <div class="flex justify-between"><span>SERVICE API</span> <span class="text-gray-300">V.2.0.0</span></div>
+          <div class="flex justify-between"><span>SECURE STORAGE</span> <span class="text-gray-300">AES-GCM-256</span></div>
+          <div class="flex justify-between"><span>LOCAL ENVIRONMENT</span> <span class="text-emerald-400">ONLINE</span></div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Chatbot scripts -->
+  <script src="js/chatbots.js"></script>
+
+</body>
+</html>
