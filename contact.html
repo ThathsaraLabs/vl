@@ -179,27 +179,33 @@
           <div class="glass-panel p-8 rounded-2xl border border-white/10 shadow-2xl relative">
             <h3 class="text-xl font-bold text-white font-display mb-6">Request a Consultation</h3>
             
-            <form id="contact-form" class="space-y-4">
+            <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
+              <input type="hidden" name="access_key" value="e30504db-29b4-457e-96af-b05cb477ea3e">
+              <input type="hidden" name="from_name" value="Vector Labs AI Website">
+              <input type="hidden" name="to_email" value="thathsara.tn@gmail.com">
+              
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label for="form-name" class="block text-xs text-gray-400 mb-1">Name <span class="text-cyan-400">*</span></label>
-                  <input type="text" id="form-name" required class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-xs sm:text-sm text-gray-200 focus:border-cyan-500 focus:outline-none transition duration-300" placeholder="Thathsara Nanayakkara">
+                  <input type="text" name="name" id="form-name" required class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-xs sm:text-sm text-gray-200 focus:border-cyan-500 focus:outline-none transition duration-300" placeholder="Thathsara Nanayakkara">
                 </div>
                 <div>
                   <label for="form-email" class="block text-xs text-gray-400 mb-1">Email <span class="text-cyan-400">*</span></label>
-                  <input type="email" id="form-email" required class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-xs sm:text-sm text-gray-200 focus:border-cyan-500 focus:outline-none transition duration-300" placeholder="thathsara@vectorlabs.ai">
+                  <input type="email" name="email" id="form-email" required class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-xs sm:text-sm text-gray-200 focus:border-cyan-500 focus:outline-none transition duration-300" placeholder="thathsara@vectorlabs.ai">
                 </div>
               </div>
               
               <div>
                 <label for="form-company" class="block text-xs text-gray-400 mb-1">Company / Organisation</label>
-                <input type="text" id="form-company" class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-xs sm:text-sm text-gray-200 focus:border-cyan-500 focus:outline-none transition duration-300" placeholder="Vector Labs AI Co.">
+                <input type="text" name="company" id="form-company" class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-xs sm:text-sm text-gray-200 focus:border-cyan-500 focus:outline-none transition duration-300" placeholder="Vector Labs AI Co.">
               </div>
               
               <div>
                 <label for="form-message" class="block text-xs text-gray-400 mb-1">Project Brief <span class="text-cyan-400">*</span></label>
-                <textarea id="form-message" required rows="4" class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-xs sm:text-sm text-gray-200 focus:border-cyan-500 focus:outline-none transition duration-300" placeholder="Outline your AI or custom software project needs here..."></textarea>
+                <textarea name="message" id="form-message" required rows="4" class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-xs sm:text-sm text-gray-200 focus:border-cyan-500 focus:outline-none transition duration-300" placeholder="Outline your AI or custom software project needs here..."></textarea>
               </div>
+              
+              <input type="hidden" name="redirect" value="https://d:\\VectorLabs AI\\Website\\vl\\thank-you.html">
               
               <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold font-display text-xs uppercase tracking-widest py-4 px-6 rounded-lg transition duration-300 shadow-xl shadow-cyan-500/10">
                 Send Request
