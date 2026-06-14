@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector Labs AI - Driving License Practice Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Glassmorphism custom styles */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        /* Keyframe Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes logoScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-logo {
+            animation: logoScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+            opacity: 0;
+        }
+        .animate-pulse-glow {
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+
+        /* Custom scrollbar for options */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen relative overflow-x-hidden flex flex-col">
+
+    <!-- Decorative glowing background blobs -->
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-1/3 -right-40 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <!-- MAIN HEADER -->
+    <header class="w-full max-w-6xl mx-auto px-4 pt-6 pb-2 z-10">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-800 pb-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-blue-600 to-indigo-600 p-2.5 rounded-xl shadow-lg shadow-indigo-600/30">
+                    <i class="fa-solid fa-car-side text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wider bg-gradient-to-r from-blue-400 via-indigo-200 to-purple-400 bg-clip-text text-transparent">VECTOR LABS AI</h1>
+                    <p class="text-xs text-slate-400 font-medium">South Korea Driving License Exam Practice</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <!-- Company Website Button -->
+                <a href="https://thathsaralabs.github.io/vl/" target="_blank" class="px-4 py-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/20 active:scale-[0.98] transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-house-laptop"></i> Company Webpage
+                </a>
+
+                <!-- Language filter panel (hidden on welcome screen, shown on quiz) -->
+                <div id="lang-filter-panel" class="flex items-center gap-2 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800/80 hidden">
+                    <span class="text-xs text-slate-400 px-2 font-semibold"><i class="fa-solid fa-language mr-1"></i> Languages:</span>
+                    <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-pointer transition-colors text-xs font-semibold glass-btn hover:bg-slate-800" id="lbl-sin">
+                        <input type="checkbox" id="chk-sinhala" checked class="hidden">
+                        <span>🇱🇰 සිංහල</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-pointer transition-colors text-xs font-semibold glass-btn hover:bg-slate-800" id="lbl-eng">
+                        <input type="checkbox" id="chk-english" checked class="hidden">
+                        <span>🇬🇧 English</span>
+                    </label>
+                    <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-pointer transition-colors text-xs font-semibold glass-btn hover:bg-slate-800" id="lbl-kor">
+                        <input type="checkbox" id="chk-korean" checked class="hidden">
+                        <span>🇰🇷 한국어</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow w-full max-w-4xl mx-auto px-4 py-8 z-10 flex flex-col justify-center items-center">
+        
+        <!-- WELCOME LANDING SCREEN -->
+        <div id="welcome-panel" class="w-full max-w-3xl glass-panel rounded-2xl shadow-2xl p-6 md:p-8 flex flex-col items-center gap-6 animate-fade-in-up">
+            
+            <!-- Animated Cover Image -->
+            <div class="w-full max-w-xl rounded-xl overflow-hidden shadow-2xl border border-slate-700/50 bg-slate-900 animate-logo">
+                <img src="FB Cover.png" alt="Vector Labs AI Logo" class="w-full h-auto object-cover transform hover:scale-[1.02] transition-transform duration-500">
+            </div>
+            
+            <!-- Welcome Heading -->
+            <div class="text-center">
+                <h2 class="text-2xl font-extrabold text-white bg-gradient-to-r from-blue-400 via-indigo-100 to-purple-400 bg-clip-text text-transparent">සාදරයෙන් පිළිගනිමු / Welcome / 환영합니다</h2>
+                <div class="h-0.5 w-24 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-2.5 rounded-full"></div>
+            </div>
+
+            <!-- Start Action Button -->
+            <button onclick="startQuiz()" class="my-2 px-12 py-5 rounded-2xl bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white font-extrabold text-lg shadow-2xl shadow-indigo-600/40 hover:shadow-indigo-500/70 hover:scale-[1.03] active:scale-[0.97] flex items-center gap-3 transition-all duration-300 animate-pulse-glow">
+                <i class="fa-solid fa-circle-play text-xl animate-bounce"></i> Start Model Questions
+            </button>
+
+            <!-- Intro Text Card -->
+            <div class="text-left w-full max-w-2xl text-slate-300 text-sm md:text-base leading-relaxed flex flex-col gap-4 font-normal">
+                <p>
+                    මෙය දකුණු කොරියාවේ <span class="text-blue-400 font-semibold">Vector Labs AI</span> ආයතනයේ පූර්ණ අනුග්‍රහය ඇතිව, අදාළ අනුමාන ප්‍රශ්න පරීක්ෂා කර සකස් කරන ලද්දකි. මෙහිදී මෙම digital ප්‍රශ්න පත්‍රයට සෘජුවම සම්බන්ධ වී පිළිතුරු සැපයීමට ද ඔබට අවස්ථාව සලසා ඇත.
+                </p>
+                
+                <!-- Download Box -->
+                <div class="bg-indigo-950/40 p-4 rounded-xl border border-indigo-900/60 flex items-center justify-between gap-4 mt-2">
+                    <div>
+                        <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block">පිළිතුරු පත්‍ර බාගත කරගැනීම (Downloads)</span>
+                        <p class="text-xs text-slate-400 mt-0.5">ප්‍රශ්න පත්‍ර සහ උත්තර පත්‍ර බාගත (Download) කරගත හැක:</p>
+                    </div>
+                    <a href="https://sites.google.com/view/thathsara/dl" target="_blank" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors whitespace-nowrap">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Web Link
+                    </a>
+                </div>
+
+                <p class="mt-2">
+                    එසේම, ඔබගේ දැනුම තවදුරටත් ඉහළ නැංවීම සඳහා අප විසින් දැනටමත් පුහුණු කරමින් පවතින <span class="text-purple-400 font-semibold">Generative AI Model</span> එක ද ඉදිරියේදී ඔබට ලබා දීමට කටයුතු යොදමින් සිටිමු. වැඩිදුර විස්තර සඳහා අපගේ නිල සමාජ මාධ්‍ය පිටු Follow කර තබාගන්න.
+                </p>
+                
+                <!-- Social Media Buttons -->
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <a href="https://www.facebook.com/vectorlabsai1" target="_blank" class="flex items-center justify-center gap-2 p-3 rounded-xl bg-[#1877F2]/10 border border-[#1877F2]/30 hover:bg-[#1877F2]/20 text-[#1877F2] font-semibold text-xs md:text-sm transition-colors">
+                        <i class="fa-brands fa-facebook text-base"></i> Facebook Page
+                    </a>
+                    <a href="https://www.linkedin.com/company/vector-labs-ai1/" target="_blank" class="flex items-center justify-center gap-2 p-3 rounded-xl bg-[#0A66C2]/10 border border-[#0A66C2]/30 hover:bg-[#0A66C2]/20 text-[#0A66C2] font-semibold text-xs md:text-sm transition-colors">
+                        <i class="fa-brands fa-linkedin text-base"></i> LinkedIn Profile
+                    </a>
+                </div>
+
+                <!-- Company Webpage Button -->
+                <a href="https://thathsaralabs.github.io/vl/" target="_blank" class="mt-4 px-5 py-3.5 rounded-xl bg-gradient-to-r from-blue-900/40 via-indigo-900/40 to-purple-900/40 hover:from-blue-900/60 hover:to-purple-900/60 text-white font-semibold text-sm border border-indigo-500/30 flex items-center justify-center gap-2.5 transition-all active:scale-[0.98] group">
+                    <i class="fa-solid fa-globe text-blue-400 group-hover:scale-110 transition-transform"></i>
+                    <span>Visit Our Company Webpage (Vector Labs)</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- QUIZ CONTENT CONTAINER (Hidden by default) -->
+        <div id="quiz-container" class="hidden w-full flex flex-col justify-center">
+            
+            <!-- Score & Progress HUD -->
+            <div id="quiz-hud" class="w-full flex justify-between items-center mb-4 text-sm font-semibold">
+                <div class="flex items-center gap-4">
+                    <span class="text-slate-400"><i class="fa-solid fa-circle-question mr-1.5"></i>Question <span id="hud-qnum" class="text-white">1</span>/100</span>
+                    <div class="w-32 md:w-48 bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+                        <div id="hud-progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-300" style="width: 1%;"></div>
+                    </div>
+                </div>
+                <div class="flex gap-3 text-xs md:text-sm">
+                    <span class="bg-emerald-950/60 border border-emerald-900/80 text-emerald-400 px-3 py-1 rounded-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-500"></i> Correct: <span id="hud-correct" class="font-bold text-white">0</span>
+                    </span>
+                    <span class="bg-rose-950/60 border border-rose-900/80 text-rose-400 px-3 py-1 rounded-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-xmark text-rose-500"></i> Incorrect: <span id="hud-incorrect" class="font-bold text-white">0</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- ACTIVE QUESTION PANEL -->
+            <div id="question-panel" class="w-full glass-panel rounded-2xl shadow-2xl p-5 md:p-8 flex flex-col gap-6 transition-all duration-300">
+                
+                <!-- Multilingual Question Stems -->
+                <div id="stems-container" class="flex flex-col gap-4">
+                    <!-- Sinhala Stem -->
+                    <div class="lang-sin bg-slate-900/40 p-4 rounded-xl border border-slate-800/40">
+                        <span class="text-xs font-bold text-blue-400 tracking-wider uppercase flex items-center gap-1 mb-1.5">
+                            <span>🇱🇰 සිංහල</span>
+                        </span>
+                        <p id="stem-sinhala" class="text-base md:text-lg leading-relaxed text-slate-100 font-medium"></p>
+                    </div>
+                    <!-- English Stem -->
+                    <div class="lang-eng bg-slate-900/40 p-4 rounded-xl border border-slate-800/40">
+                        <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase flex items-center gap-1 mb-1.5">
+                            <span>🇬🇧 English</span>
+                        </span>
+                        <p id="stem-english" class="text-base md:text-lg leading-relaxed text-slate-100 font-medium"></p>
+                    </div>
+                    <!-- Korean Stem -->
+                    <div class="lang-kor bg-slate-900/40 p-4 rounded-xl border border-slate-800/40">
+                        <span class="text-xs font-bold text-purple-400 tracking-wider uppercase flex items-center gap-1 mb-1.5">
+                            <span>🇰🇷 한국어</span>
+                        </span>
+                        <p id="stem-korean" class="text-base md:text-lg leading-relaxed text-slate-100 font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- Choices Grid -->
+                <div id="choices-container" class="flex flex-col gap-3">
+                    <!-- Option A -->
+                    <button onclick="selectOption(0)" id="btn-opt-0" class="w-full text-left p-4 rounded-xl glass-btn text-sm md:text-base flex items-start gap-3 relative overflow-hidden group">
+                        <div class="opt-indicator flex-shrink-0 w-6 h-6 rounded-full border border-slate-700 flex items-center justify-center font-bold text-xs text-slate-400 bg-slate-900 group-hover:border-slate-500">A</div>
+                        <div class="flex-grow flex flex-col gap-2">
+                            <div class="lang-sin text-slate-200"><span class="text-slate-400 font-medium mr-1">🇱🇰</span> <span id="opt-0-sin"></span></div>
+                            <div class="lang-eng text-slate-300 border-t border-slate-800/50 pt-1.5"><span class="text-slate-500 font-medium mr-1">🇬🇧</span> <span id="opt-0-eng"></span></div>
+                            <div class="lang-kor text-slate-300 border-t border-slate-800/50 pt-1.5"><span class="text-slate-500 font-medium mr-1">🇰🇷</span> <span id="opt-0-kor"></span></div>
+                        </div>
+                        <div class="feedback-icon hidden items-center justify-center w-6 h-6 rounded-full"></div>
+                    </button>
+                    <!-- Option B -->
+                    <button onclick="selectOption(1)" id="btn-opt-1" class="w-full text-left p-4 rounded-xl glass-btn text-sm md:text-base flex items-start gap-3 relative overflow-hidden group">
+                        <div class="opt-indicator flex-shrink-0 w-6 h-6 rounded-full border border-slate-700 flex items-center justify-center font-bold text-xs text-slate-400 bg-slate-900 group-hover:border-slate-500">B</div>
+                        <div class="flex-grow flex flex-col gap-2">
+                            <div class="lang-sin text-slate-200"><span class="text-slate-400 font-medium mr-1">🇱🇰</span> <span id="opt-1-sin"></span></div>
+                            <div class="lang-eng text-slate-300 border-t border-slate-800/50 pt-1.5"><span class="text-slate-500 font-medium mr-1">🇬🇧</span> <span id="opt-1-eng"></span></div>
+                            <div class="lang-kor text-slate-300 border-t border-slate-800/50 pt-1.5"><span class="text-slate-500 font-medium mr-1">🇰🇷</span> <span id="opt-1-kor"></span></div>
+                        </div>
+                        <div class="feedback-icon hidden items-center justify-center w-6 h-6 rounded-full"></div>
+                    </button>
+                    <!-- Option C -->
+                    <button onclick="selectOption(2)" id="btn-opt-2" class="w-full text-left p-4 rounded-xl glass-btn text-sm md:text-base flex items-start gap-3 relative overflow-hidden group">
+                        <div class="opt-indicator flex-shrink-0 w-6 h-6 rounded-full border border-slate-700 flex items-center justify-center font-bold text-xs text-slate-400 bg-slate-900 group-hover:border-slate-500">C</div>
+                        <div class="flex-grow flex flex-col gap-2">
+                            <div class="lang-sin text-slate-200"><span class="text-slate-400 font-medium mr-1">🇱🇰</span> <span id="opt-2-sin"></span></div>
+                            <div class="lang-eng text-slate-300 border-t border-slate-800/50 pt-1.5"><span class="text-slate-500 font-medium mr-1">🇬🇧</span> <span id="opt-2-eng"></span></div>
+                            <div class="lang-kor text-slate-300 border-t border-slate-800/50 pt-1.5"><span class="text-slate-500 font-medium mr-1">🇰🇷</span> <span id="opt-2-kor"></span></div>
+                        </div>
+                        <div class="feedback-icon hidden items-center justify-center w-6 h-6 rounded-full"></div>
+                    </button>
+                    <!-- Option D -->
+                    <button onclick="selectOption(3)" id="btn-opt-3" class="w-full text-left p-4 rounded-xl glass-btn text-sm md:text-base flex items-start gap-3 relative overflow-hidden group">
+                        <div class="opt-indicator flex-shrink-0 w-6 h-6 rounded-full border border-slate-700 flex items-center justify-center font-bold text-xs text-slate-400 bg-slate-900 group-hover:border-slate-500">D</div>
+                        <div class="flex-grow flex flex-col gap-2">
+                            <div class="lang-sin text-slate-200"><span class="text-slate-400 font-medium mr-1">🇱🇰</span> <span id="opt-3-sin"></span></div>
+                            <div class="lang-eng text-slate-300 border-t border-slate-800/50 pt-1.5"><span class="text-slate-500 font-medium mr-1">🇬🇧</span> <span id="opt-3-eng"></span></div>
+                            <div class="lang-kor text-slate-300 border-t border-slate-800/50 pt-1.5"><span class="text-slate-500 font-medium mr-1">🇰🇷</span> <span id="opt-3-kor"></span></div>
+                        </div>
+                        <div class="feedback-icon hidden items-center justify-center w-6 h-6 rounded-full"></div>
+                    </button>
+                </div>
+
+                <!-- Buttons Panel -->
+                <div class="flex justify-between items-center gap-4 mt-2">
+                    <button id="btn-prev" onclick="prevQuestion()" disabled class="px-5 py-3 rounded-xl border border-slate-800 bg-slate-900/60 font-semibold text-sm hover:bg-slate-800 text-slate-300 disabled:opacity-30 disabled:pointer-events-none flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-arrow-left"></i> Previous
+                    </button>
+
+                    <div class="flex gap-3">
+                        <button id="btn-check" onclick="checkAnswer()" disabled class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm disabled:opacity-40 disabled:pointer-events-none shadow-lg shadow-indigo-600/20 flex items-center gap-2 active:scale-[0.98] transition-all">
+                            <i class="fa-solid fa-circle-question"></i> Check Answer
+                        </button>
+                        <button id="btn-next" onclick="nextQuestion()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/20 flex items-center gap-2 active:scale-[0.98] transition-all">
+                            Next <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUIZ COMPLETE PANEL -->
+            <div id="complete-panel" class="w-full glass-panel rounded-2xl shadow-2xl p-6 md:p-10 flex flex-col items-center text-center gap-6 hidden transition-all duration-300">
+                <div class="w-20 h-20 bg-gradient-to-tr from-emerald-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30 mb-2">
+                    <i class="fa-solid fa-trophy text-4xl text-white"></i>
+                </div>
+                
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white">Congratulations!</h2>
+                    <p class="text-sm text-slate-400 mt-1">You have completed the 100 questions mock exam.</p>
+                </div>
+                
+                <!-- Result Stats Card -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-xl my-4">
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80">
+                        <span class="text-xs text-slate-500 font-bold uppercase tracking-wider block">Total Questions</span>
+                        <span class="text-2xl font-extrabold text-white mt-1">100</span>
+                    </div>
+                    <div class="bg-emerald-950/40 p-4 rounded-xl border border-emerald-900/60">
+                        <span class="text-xs text-emerald-500 font-bold uppercase tracking-wider block">Correct</span>
+                        <span id="final-correct" class="text-2xl font-extrabold text-emerald-400 mt-1">0</span>
+                    </div>
+                    <div class="bg-rose-950/40 p-4 rounded-xl border border-rose-900/60">
+                        <span class="text-xs text-rose-500 font-bold uppercase tracking-wider block">Incorrect</span>
+                        <span id="final-incorrect" class="text-2xl font-extrabold text-rose-400 mt-1">0</span>
+                    </div>
+                    <div class="bg-indigo-950/40 p-4 rounded-xl border border-indigo-900/60">
+                        <span class="text-xs text-indigo-500 font-bold uppercase tracking-wider block">Score Rate</span>
+                        <span id="final-rate" class="text-2xl font-extrabold text-indigo-400 mt-1">0%</span>
+                    </div>
+                </div>
+
+                <div id="status-badge" class="px-6 py-2 rounded-full font-bold text-base tracking-wider shadow-md">
+                    PASS (60% or higher)
+                </div>
+
+                <button onclick="restartQuiz()" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 flex items-center gap-2 active:scale-95 transition-all mt-4">
+                    <i class="fa-solid fa-arrows-rotate"></i> Restart Mock Exam
+                </button>
+            </div>
+
+            <!-- Advertisement Banner -->
+            <div id="ad-banner" class="mt-6 w-full max-w-xl mx-auto rounded-3xl overflow-hidden border border-slate-800 bg-slate-950/95 shadow-2xl shadow-indigo-600/10">
+                <a href="https://sites.google.com/view/thathsara/ai-course" target="_blank" rel="noreferrer noopener" class="block group">
+                    <img src="Ad.png" alt="Advertisement" class="w-full max-h-48 mx-auto h-auto object-contain transition-transform duration-300 group-hover:scale-[1.01]" />
+                    <div class="px-4 py-3 bg-slate-950/90 text-center text-xs text-slate-300 uppercase tracking-wider font-semibold border-t border-slate-800">Click to Learn More - AI Course</div>
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="w-full max-w-6xl mx-auto px-4 py-6 text-center text-xs text-slate-500 border-t border-slate-900 mt-auto z-10">
+        <p>&copy; 2026 Vector Labs AI. All Rights Reserved. Special Multilingual Exam Practice Platform.</p>
+        <p class="mt-1 flex justify-center gap-4">
+            <a href="https://thathsaralabs.github.io/vl/" target="_blank" class="hover:text-slate-300 transition-colors"><i class="fa-solid fa-globe"></i> Official Site</a>
+            <a href="https://www.facebook.com/vectorlabsai1" target="_blank" class="hover:text-slate-300 transition-colors"><i class="fa-brands fa-facebook"></i> Facebook</a>
+            <a href="https://www.linkedin.com/company/vector-labs-ai1/" target="_blank" class="hover:text-slate-300 transition-colors"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+        </p>
+        <div class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-800/60 text-xs shadow-md">
+            <span class="text-slate-400">Digital Platform Developer:</span>
+            <a href="https://sites.google.com/view/thathsara" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-bold tracking-wide transition-all flex items-center gap-1">
+                Thathsara Nanayakkara <i class="fa-solid fa-square-arrow-up-right text-[10px] text-indigo-400"></i>
+            </a>
+        </div>
+    </footer>
+
+    <!-- INJECT QUESTIONS DATA AND QUIZ INTERACTIVE LOGIC -->
+    <script src="questions.js"></script>
+    <script>
+        // Quiz State Machine
+        let currentIndex = 0;
+        let selectedOption = null;
+        let checked = false;
+        
+        // Track stats
+        let scoreCorrect = 0;
+        let scoreIncorrect = 0;
+        
+        // Track selected option per question: index -> { selectedOptionIndex, checkedState, isCorrect }
+        const userProgress = new Array(questions.length).fill(null);
+
+        // Language Filters selectors
+        const chkSinhala = document.getElementById('chk-sinhala');
+        const chkEnglish = document.getElementById('chk-english');
+        const chkKorean = document.getElementById('chk-korean');
+
+        const labelSin = document.getElementById('lbl-sin');
+        const labelEng = document.getElementById('lbl-eng');
+        const labelKor = document.getElementById('lbl-kor');
+
+        // Transition from welcome screen to quiz
+        function startQuiz() {
+            const welcome = document.getElementById('welcome-panel');
+            const quiz = document.getElementById('quiz-container');
+            const filterPanel = document.getElementById('lang-filter-panel');
+            
+            // Fade out welcome
+            welcome.classList.add('opacity-0', 'scale-95');
+            welcome.style.transition = 'all 0.4s ease';
+            
+            setTimeout(() => {
+                welcome.classList.add('hidden');
+                quiz.classList.remove('hidden');
+                filterPanel.classList.remove('hidden');
+                
+                // Fade in quiz container
+                quiz.classList.add('opacity-0', 'scale-95');
+                requestAnimationFrame(() => {
+                    quiz.style.transition = 'all 0.4s ease';
+                    quiz.classList.remove('opacity-0', 'scale-95');
+                    quiz.classList.add('opacity-100', 'scale-100');
+                });
+            }, 400);
+        }
+
+        // Apply language visibility settings
+        function updateLanguageFilters() {
+            const showSin = chkSinhala.checked;
+            const showEng = chkEnglish.checked;
+            const showKor = chkKorean.checked;
+
+            document.querySelectorAll('.lang-sin').forEach(el => el.style.display = showSin ? 'block' : 'none');
+            document.querySelectorAll('.lang-eng').forEach(el => el.style.display = showEng ? 'block' : 'none');
+            document.querySelectorAll('.lang-kor').forEach(el => el.style.display = showKor ? 'block' : 'none');
+
+            labelSin.className = `flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-pointer transition-colors text-xs font-semibold ${showSin ? 'bg-blue-600/20 border-blue-500/50 text-blue-400 border' : 'glass-btn hover:bg-slate-800 text-slate-400'}`;
+            labelEng.className = `flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-pointer transition-colors text-xs font-semibold ${showEng ? 'bg-indigo-600/20 border-indigo-500/50 text-indigo-400 border' : 'glass-btn hover:bg-slate-800 text-slate-400'}`;
+            labelKor.className = `flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-pointer transition-colors text-xs font-semibold ${showKor ? 'bg-purple-600/20 border-purple-500/50 text-purple-400 border' : 'glass-btn hover:bg-slate-800 text-slate-400'}`;
+        }
+
+        [chkSinhala, chkEnglish, chkKorean].forEach(chk => {
+            chk.addEventListener('change', updateLanguageFilters);
+        });
+
+        // Initialize quiz
+        window.addEventListener('DOMContentLoaded', () => {
+            loadQuestion(0);
+            updateLanguageFilters();
+        });
+
+        function loadQuestion(index) {
+            currentIndex = index;
+            const q = questions[index];
+
+            selectedOption = null;
+            checked = false;
+
+            // Update HUD
+            document.getElementById('hud-qnum').innerText = index + 1;
+            document.getElementById('hud-progress-bar').style.width = `${((index + 1) / questions.length) * 100}%`;
+            document.getElementById('hud-correct').innerText = scoreCorrect;
+            document.getElementById('hud-incorrect').innerText = scoreIncorrect;
+
+            // Load Stems
+            document.getElementById('stem-sinhala').innerText = q.sinhala.stem;
+            document.getElementById('stem-english').innerText = q.english.stem;
+            document.getElementById('stem-korean').innerText = q.korean.stem;
+
+            // Load Choices
+            for (let i = 0; i < 4; i++) {
+                document.getElementById(`opt-${i}-sin`).innerText = q.sinhala.choices[i];
+                document.getElementById(`opt-${i}-eng`).innerText = q.english.choices[i];
+                document.getElementById(`opt-${i}-kor`).innerText = q.korean.choices[i];
+
+                const btn = document.getElementById(`btn-opt-${i}`);
+                btn.className = "w-full text-left p-4 rounded-xl glass-btn text-sm md:text-base flex items-start gap-3 relative overflow-hidden group";
+                btn.disabled = false;
+
+                const indicator = btn.querySelector('.opt-indicator');
+                indicator.className = "opt-indicator flex-shrink-0 w-6 h-6 rounded-full border border-slate-700 flex items-center justify-center font-bold text-xs text-slate-400 bg-slate-900 group-hover:border-slate-500";
+                
+                const fIcon = btn.querySelector('.feedback-icon');
+                fIcon.className = "feedback-icon hidden items-center justify-center w-6 h-6 rounded-full";
+                fIcon.innerHTML = "";
+            }
+
+            const savedState = userProgress[index];
+            if (savedState !== null) {
+                selectedOption = savedState.selected;
+                checked = true;
+                applyCheckedStyles(q.answer);
+                document.getElementById('btn-check').classList.add('hidden');
+                document.getElementById('btn-next').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-check').classList.remove('hidden');
+                document.getElementById('btn-check').disabled = true;
+                document.getElementById('btn-next').classList.add('hidden');
+            }
+
+            document.getElementById('btn-prev').disabled = index === 0;
+            
+            updateLanguageFilters();
+        }
+
+        function selectOption(optIndex) {
+            if (checked) return;
+
+            selectedOption = optIndex;
+            document.getElementById('btn-check').disabled = false;
+
+            for (let i = 0; i < 4; i++) {
+                const btn = document.getElementById(`btn-opt-${i}`);
+                const indicator = btn.querySelector('.opt-indicator');
+                
+                if (i === optIndex) {
+                    btn.className = "w-full text-left p-4 rounded-xl text-sm md:text-base flex items-start gap-3 relative overflow-hidden bg-indigo-950/40 border border-indigo-500 text-indigo-100";
+                    indicator.className = "opt-indicator flex-shrink-0 w-6 h-6 rounded-full border border-indigo-400 flex items-center justify-center font-bold text-xs text-indigo-400 bg-indigo-900/50";
+                } else {
+                    btn.className = "w-full text-left p-4 rounded-xl glass-btn text-sm md:text-base flex items-start gap-3 relative overflow-hidden group";
+                    indicator.className = "opt-indicator flex-shrink-0 w-6 h-6 rounded-full border border-slate-700 flex items-center justify-center font-bold text-xs text-slate-400 bg-slate-900 group-hover:border-slate-500";
+                }
+            }
+        }
+
+        function checkAnswer() {
+            if (selectedOption === null || checked) return;
+
+            checked = true;
+            const correctOptionIdx = questions[currentIndex].answer;
+            const isCorrect = selectedOption === correctOptionIdx;
+
+            if (isCorrect) {
+                scoreCorrect++;
+            } else {
+                scoreIncorrect++;
+            }
+
+            userProgress[currentIndex] = {
+                selected: selectedOption,
+                isCorrect: isCorrect
+            };
+
+            document.getElementById('hud-correct').innerText = scoreCorrect;
+            document.getElementById('hud-incorrect').innerText = scoreIncorrect;
+
+            applyCheckedStyles(correctOptionIdx);
+
+            document.getElementById('btn-check').classList.add('hidden');
+            document.getElementById('btn-next').classList.remove('hidden');
+        }
+
+        function applyCheckedStyles(correctOptionIdx) {
+            for (let i = 0; i < 4; i++) {
+                const btn = document.getElementById(`btn-opt-${i}`);
+                btn.disabled = true;
+                
+                const indicator = btn.querySelector('.opt-indicator');
+                const fIcon = btn.querySelector('.feedback-icon');
+                fIcon.classList.remove('hidden');
+                fIcon.classList.add('flex');
+
+                if (i === correctOptionIdx) {
+                    btn.className = "w-full text-left p-4 rounded-xl text-sm md:text-base flex items-start gap-3 relative overflow-hidden bg-emerald-950/40 border border-emerald-500 text-emerald-200";
+                    indicator.className = "opt-indicator flex-shrink-0 w-6 h-6 rounded-full border border-emerald-500 flex items-center justify-center font-bold text-xs text-emerald-400 bg-emerald-900/40";
+                    fIcon.innerHTML = `<i class="fa-solid fa-check text-emerald-400 text-sm"></i>`;
+                } else if (i === selectedOption) {
+                    btn.className = "w-full text-left p-4 rounded-xl text-sm md:text-base flex items-start gap-3 relative overflow-hidden bg-rose-950/40 border border-rose-500/80 text-rose-200";
+                    indicator.className = "opt-indicator flex-shrink-0 w-6 h-6 rounded-full border border-rose-500 flex items-center justify-center font-bold text-xs text-rose-400 bg-rose-900/40";
+                    fIcon.innerHTML = `<i class="fa-solid fa-xmark text-rose-400 text-sm"></i>`;
+                } else {
+                    btn.className = "w-full text-left p-4 rounded-xl text-sm md:text-base flex items-start gap-3 relative overflow-hidden border border-slate-900 bg-slate-900/20 text-slate-500 opacity-40";
+                    indicator.className = "opt-indicator flex-shrink-0 w-6 h-6 rounded-full border border-slate-800 flex items-center justify-center font-bold text-xs text-slate-600 bg-slate-950";
+                }
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIndex < questions.length - 1) {
+                loadQuestion(currentIndex + 1);
+            } else {
+                showCompletionScreen();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                loadQuestion(currentIndex - 1);
+            }
+        }
+
+        function showCompletionScreen() {
+            document.getElementById('question-panel').classList.add('hidden');
+            document.getElementById('quiz-hud').classList.add('hidden');
+            document.getElementById('lang-filter-panel').classList.add('hidden');
+            
+            document.getElementById('complete-panel').classList.remove('hidden');
+
+            document.getElementById('final-correct').innerText = scoreCorrect;
+            document.getElementById('final-incorrect').innerText = scoreIncorrect;
+            
+            const rate = Math.round((scoreCorrect / questions.length) * 100);
+            document.getElementById('final-rate').innerText = `${rate}%`;
+
+            const badge = document.getElementById('status-badge');
+            if (rate >= 60) {
+                badge.className = "px-6 py-2 rounded-full font-bold text-base tracking-wider shadow-md bg-emerald-950 border border-emerald-500 text-emerald-400 shadow-emerald-500/10";
+                badge.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5"></i> PASS (Score: ${rate}%)`;
+            } else {
+                badge.className = "px-6 py-2 rounded-full font-bold text-base tracking-wider shadow-md bg-rose-950 border border-rose-500 text-rose-400 shadow-rose-500/10";
+                badge.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1.5"></i> FAIL (Required: 60%)`;
+            }
+        }
+
+        function restartQuiz() {
+            scoreCorrect = 0;
+            scoreIncorrect = 0;
+            userProgress.fill(null);
+
+            document.getElementById('complete-panel').classList.add('hidden');
+            document.getElementById('question-panel').classList.remove('hidden');
+            document.getElementById('quiz-hud').classList.remove('hidden');
+            document.getElementById('lang-filter-panel').classList.remove('hidden');
+
+            loadQuestion(0);
+        }
+    </script>
+</body>
+</html>
