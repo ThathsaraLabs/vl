@@ -404,11 +404,16 @@
             </div>
             
             <!-- Score & Progress HUD -->
-            <div id="quiz-hud" class="w-full flex justify-between items-center mb-4 text-sm font-semibold">
-                <div class="flex items-center gap-4">
+            <div id="quiz-hud" class="w-full flex flex-col gap-3 md:flex-row md:justify-between md:items-center mb-4 text-sm font-semibold">
+                <div class="flex flex-wrap items-center gap-3">
                     <span class="text-slate-400"><i class="fa-solid fa-circle-question mr-1.5"></i>Question <span id="hud-qnum" class="text-white">1</span>/100</span>
                     <div class="w-32 md:w-48 bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
                         <div id="hud-progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-300" style="width: 1%;"></div>
+                    </div>
+                    <div class="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-2">
+                        <label for="question-jump" class="text-[11px] uppercase tracking-wide text-slate-400">Jump to</label>
+                        <select id="question-jump" class="bg-slate-950 border border-slate-800 text-slate-100 rounded-lg px-2 py-1 text-sm outline-none focus:border-indigo-500">
+                        </select>
                     </div>
                 </div>
                 <div class="flex gap-3 text-xs md:text-sm">
@@ -675,10 +680,32 @@
             chk.addEventListener('change', updateLanguageFilters);
         });
 
+        function populateQuestionSelector() {
+            const selector = document.getElementById('question-jump');
+            if (!selector) return;
+
+            selector.innerHTML = '';
+            for (let i = 1; i <= questions.length; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Q${i}`;
+                selector.appendChild(option);
+            }
+
+            selector.value = currentIndex + 1;
+            selector.onchange = () => {
+                const selectedIndex = Number(selector.value) - 1;
+                if (!Number.isNaN(selectedIndex) && selectedIndex >= 0 && selectedIndex < questions.length) {
+                    loadQuestion(selectedIndex);
+                }
+            };
+        }
+
         // Initialize quiz
         window.addEventListener('DOMContentLoaded', () => {
             loadQuestion(0);
             updateLanguageFilters();
+            populateQuestionSelector();
         });
 
         function loadQuestion(index) {
@@ -693,6 +720,10 @@
             document.getElementById('hud-progress-bar').style.width = `${((index + 1) / questions.length) * 100}%`;
             document.getElementById('hud-correct').innerText = scoreCorrect;
             document.getElementById('hud-incorrect').innerText = scoreIncorrect;
+            const jumpSelect = document.getElementById('question-jump');
+            if (jumpSelect) {
+                jumpSelect.value = index + 1;
+            }
 
             // Load Stems
             document.getElementById('stem-sinhala').innerText = q.sinhala.stem;
